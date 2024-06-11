@@ -8,10 +8,10 @@
  */
 
 /****************************************************************************
- * Betterfox                                                                *
- * "Ad meliora"                                                             *
+ * Based on Betterfox [Forked]                                              *
  * version: 126                                                             *
  * url: https://github.com/yokoffing/Betterfox                              *
+ * Bauti's user.js:                                                         *
 ****************************************************************************/
 
 /****************************************************************************
@@ -45,15 +45,16 @@ user_pref("network.dnsCacheExpiration", 3600);
 user_pref("network.ssl_tokens_cache_capacity", 10240);
 
 /** SPECULATIVE LOADING ***/
-user_pref("network.dns.disablePrefetch", true);
-user_pref("network.dns.disablePrefetchFromHTTPS", true);
-user_pref("network.prefetch-next", false);
-user_pref("network.predictor.enabled", false);
-user_pref("network.predictor.enable-prefetch", false);
+user_pref("network.dns.disablePrefetch", true); // Desactiva el prefetching de DNS para todas las solicitudes.
+user_pref("network.dns.disablePrefetchFromHTTPS", true); // Desactiva el prefetching de DNS para solicitudes HTTPS.
+user_pref("network.prefetch-next", false); // Desactiva el prefetching de elnaces (precarga de las páginas vinculadas).
+user_pref("network.predictor.enabled", false); // Desactiva el predictor de red, que anticipa las solicitudes de recursos basadas en el comportamiento del usuario.
+user_pref("network.predictor.enable-prefetch", false); // Desactiva el prefetching dentro del predictor de red.
 
 /** EXPERIMENTAL ***/
 user_pref("layout.css.grid-template-masonry-value.enabled", true);
 user_pref("dom.enable_web_task_scheduling", true);
+user_pref("layout.css.has-selector.enabled", true); // Añadí esta función, facilita la creación de estilos CSS más específicos y contextuales sin la necesidad de JS.
 user_pref("dom.security.sanitizer.enabled", true);
 
 /****************************************************************************
@@ -61,13 +62,16 @@ user_pref("dom.security.sanitizer.enabled", true);
 ****************************************************************************/
 /** TRACKING PROTECTION ***/
 user_pref("browser.contentblocking.category", "strict");
-user_pref("urlclassifier.trackingSkipURLs", "*.reddit.com, *.twitter.com, *.twimg.com, *.tiktok.com");
-user_pref("urlclassifier.features.socialtracking.skipURLs", "*.instagram.com, *.twitter.com, *.twimg.com");
+user_pref("urlclassifier.trackingSkipURLs", 
+    "*.reddit.com, *.twitter.com, *.twimg.com, *.tiktok.com");
+user_pref("urlclassifier.features.socialtracking.skipURLs", 
+    "*.instagram.com, *.twitter.com, *.twimg.com");
 user_pref("network.cookie.sameSite.noneRequiresSecure", true);
 user_pref("browser.download.start_downloads_in_tmp_dir", true);
 user_pref("browser.helperApps.deleteTempFileOnExit", true);
 user_pref("browser.uitour.enabled", false);
 user_pref("privacy.globalprivacycontrol.enabled", true);
+user_pref("network.cookie.cookieBehavior", 1); // Bloquear las cookies de terceros
 
 /** OCSP & CERTS / HPKP ***/
 user_pref("security.OCSP.enabled", 0);
@@ -89,7 +93,7 @@ user_pref("privacy.history.custom", true);
 /** SEARCH / URL BAR ***/
 user_pref("browser.search.separatePrivateDefault.ui.enabled", true);
 user_pref("browser.urlbar.update2.engineAliasRefresh", true);
-user_pref("browser.search.suggest.enabled", false);
+user_pref("browser.search.suggest.enabled", false); // Ponerlo en "true" si quiere las sugerencias de búsqueda
 user_pref("browser.urlbar.suggest.quicksuggest.sponsored", false);
 user_pref("browser.urlbar.suggest.quicksuggest.nonsponsored", false);
 user_pref("browser.formfill.enable", false);
@@ -149,6 +153,7 @@ user_pref("toolkit.telemetry.firstShutdownPing.enabled", false);
 user_pref("toolkit.telemetry.coverage.opt-out", true);
 user_pref("toolkit.coverage.opt-out", true);
 user_pref("toolkit.coverage.endpoint.base", "");
+user_pref("browser.ping-centre.telemetry", false); // Agregado, no se envían "Pings" de telemetría a Firefoxñ.
 user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.telemetry", false);
 
@@ -233,13 +238,69 @@ user_pref("layout.word_select.eat_space_to_next_word", false);
 // visit https://github.com/yokoffing/Betterfox/wiki/Common-Overrides
 // visit https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening
 // Enter your personal overrides below this line:
+user_pref("gfx.canvas.accelerated", true);
+
+/** Telemetría **/ 
+user_pref("toolkit.telemetry.reportingpolicy.firstRun", false); // Deshabilitar el envío de datos de seguimiento de uso
+
+/** GEOLOCALIZACIÓN **/
+/** Esta mini-sección desabilita todo lo que tenga que ver con geolocalización,
+ *  si se quiere usar Google Maps o distintos sitios que requieran 
+ * la geolocalización, entonces comentar o borrar esta sección. */ 
+user_pref("geo.enabled", false);
+user_pref("browser.search.geoSpecificDefaults", false);
+user_pref("browser.search.geoSpecificDefaults.url", "");
+user_pref("geo.wifi.uri", ""); // Deshabilitar la API de geolocalización WiFi
+
+// Deshabilitar el envío de crashes de Firefox (Flash Player en específico)
+user_pref("dom.ipc.plugins.flash.subprocess.crashreporter.enabled", false);
+
+// Seguridad
+user_pref("shield.savant.enabled", false);
+user_pref("dom.allow_scripts_to_close_windows", false); // Desabilita la ejecución de scripts obsoletos
+user_pref("browser.newtabpage.activity-stream.disableSnippets", true); // Desabilitar el seguimiento de contenido de Mozilla
+
+// Deshabilitar el plugin de Java
+// user_pref("plugin.state.java", 0); // Descomentar si así lo desea, tenga cuidado igualmente
+
+// Deshabilitar las recomendaciones de Mozilla en la barra de direcciones
+// user_pref("browser.urlbar.suggest.searches", false);
+// user_pref("browser.urlbar.suggest.history", false);
+// user_pref("browser.urlbar.suggest.bookmark", false);
+
+/** EXPERIMENTAL (PUEDE CAUSAR ERRORES!) **/
+
+// Deshabilitar el seguimiento de estado de red en el navegador
+user_pref("network.allow-experiments", false);
+
+// Deshabilitar la recolección de datos de experimentos de usuario y telemetría
+user_pref("experiments.enabled", false);
+user_pref("experiments.supported", false)
+user_pref("toolkit.telemetry.server_owner", "");
+user_pref("browser.tabs.remote.separatedMozillaDomains", "");
 
 /****************************************************************************
  * SECTION: SMOOTHFOX                                                       *
 ****************************************************************************/
 // visit https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
 // Enter your scrolling overrides below this line:
+user_pref("apz.overscroll.enabled", true); // Por defecto (no sirve para Linux)
+user_pref("general.smoothScroll", true);
+user_pref("general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", 12);
+user_pref("general.smoothScroll.msdPhysics.enabled", true);
+user_pref("general.smoothScroll.msdPhysics.motionBeginSpringConstant", 600);
+user_pref("general.smoothScroll.msdPhysics.regularSpringConstant", 650);
+user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaMS", 25);
+user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaRatio", 2.0);
+user_pref("general.smoothScroll.msdPhysics.slowdownSpringConstant", 250);
+user_pref("mousewheel.default.delta_multiplier_y", 300);
+user_pref("general.smoothScroll.currentVelocityWeighting", 1.0);
+user_pref("general.smoothScroll.stopDecelerationWeighting", 1.0);
 
 /****************************************************************************
  * END: BETTERFOX                                                           *
+ * Terminado, espero que les haya sido de utilidad para tomar como          *
+ * referencia o bien utilizarlo de forma cotidiana                          *
+ * Based on Betterbox, I just modfied the original resource                 *
+ * & added extra features.                                                  *
 ****************************************************************************/
